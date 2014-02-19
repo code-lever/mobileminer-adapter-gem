@@ -1,24 +1,18 @@
-# Mobileminer::Adapter [![Build Status](https://travis-ci.org/code-lever/mobileminer-adapter-gem.png)](https://travis-ci.org/code-lever/mobileminer-adapter-gem) [![Dependency Status](https://gemnasium.com/code-lever/mobileminer-adapter-gem.png)](https://gemnasium.com/code-lever/mobileminer-adapter-gem) [![Code Climate](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem.png)](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem)
+## MobileMiner Adapter [![Build Status](https://travis-ci.org/code-lever/mobileminer-adapter-gem.png)](https://travis-ci.org/code-lever/mobileminer-adapter-gem) [![Dependency Status](https://gemnasium.com/code-lever/mobileminer-adapter-gem.png)](https://gemnasium.com/code-lever/mobileminer-adapter-gem) [![Code Climate](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem.png)](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem)
 
-TODO: Write a gem description
+Just a simple Ruby gem to shove data at MobileMiner.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'mobileminer-adapter'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install it yourself as:
 
     $ gem install mobileminer-adapter
 
 ## Usage
 
-TODO: Write usage instructions here
+First, dump out a skeleton configuration file:
+
+    $ mobileminer-adapter -s
 
 ## Contributing
 
