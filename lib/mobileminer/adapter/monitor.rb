@@ -16,12 +16,10 @@ module Mobileminer
       end
 
       def run
-        api = Brigade::Monitor::API.new(@email, @key, @log)
+        api = Mobileminer::Adapter::API.new(@email, @key, @log)
 
         @log.info("Monitoring #{@miners.length} miners")
         loop do
-          updates = []
-
           @miners.each do |miner|
             @log.debug("Beginning miner: #{miner}")
 
@@ -29,19 +27,22 @@ module Mobileminer
               update = miner[:fetcher].get_update
             rescue Timeout::Error => e
               @log.warn("Timeout::Error building update for #{miner[:name]} (#{e})")
+              next
               # XXX put something in the update to indicate it barfed?
             rescue SystemCallError => e
               @log.error("SystemCallError building update for #{miner[:name]} (#{e})")
+              next
               # XXX put something in the update to indicate it barfed?
             rescue Exception => e
               @log.error("Exception building update for #{miner[:name]} (#{e})")
+              next
               # XXX put something in the update to indicate it barfed?
             end
 
-            @log.info("Updates available (#{updates.length}), submitting")
+            @log.info("Submitting update for #{miner[:name]}")
             begin
               tries ||= 3
-              response = api.statistics(miner[:name], update.to_json)
+              response = api.statistics(miner[:name], update)
             rescue Exception => e
               @log.error("Exception submitting updates (#{e})")
               unless (tries -= 1).zero?
@@ -51,11 +52,11 @@ module Mobileminer
                 @log.error('Giving up for this update...')
               end
             else
-              if 401 == response.code
-                @log.error('Unauthorized response submitting updates, check API key!')
-                return
+              if 201 == response.code
+                @log.debug('Successfully submitted update')
+              else
+                @log.error('Error submitting updates, check API key!')
               end
-              @log.info("Submitted updates (status: #{response.code})")
             end
           end
 

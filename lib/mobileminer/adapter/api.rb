@@ -1,7 +1,7 @@
 require 'httparty'
 
-module Brigade
-  module Monitor
+module Mobileminer
+  module Adapter
 
     class API
 
@@ -16,8 +16,8 @@ module Brigade
         @log = logger
       end
 
-      def statistics(machine, data)
-        command("/MiningStatisticsInput#{auth_string}&machineName=#{machine}", updates: data)
+      def statistics(machine, body)
+        command("/MiningStatisticsInput#{auth_string}&machineName=#{machine}", body)
       end
 
       private
@@ -26,9 +26,11 @@ module Brigade
         "?emailAddress=#{@email}&applicationKey=#{@key}&apiKey=#{@@API_KEY}"
       end
 
-      def command(command, params)
-        @log.debug("Posting command: #{command}, data: #{params}")
-        #self.class.post(command, body: params)
+      def command(command, body)
+        command = URI.encode(command)
+        body = body.to_json
+        @log.debug("Posting command: #{command}, body: #{body}")
+        self.class.post(command, body: body, :headers => { 'Content-Type' => 'application/json' })
       end
 
     end
