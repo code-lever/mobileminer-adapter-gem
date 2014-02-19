@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+
+require 'awesome_print'
+require 'mobileminer/adapter'
+require 'cgminer/api'
+require 'logger'
+require 'optparse'
+require 'yaml'
+
+me = File.basename(__FILE__)
+
+log = Logger.new(STDOUT)
+log.level = Logger::WARN
+
+options = {}
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: #{me} [options]"
+  opts.on('-s', '--sample [FILE]', String, 'Write a sample configuration file') do |file|
+    file ||= 'config.yaml'
+    File.open(file, 'w') do |f|
+      f.write <<EOF
+# Set the email address and application key to your own.
+application-key: REPLACE_WITH_YOUR_APPLICATION_KEY
+email-address: REPLACE_WITH_YOUR_EMAIL_ADDRESS
+
+# Add the miners you wish to monitor with this agent.
+# port is optional, it defaults to 4028.
+miners:
+  'Unnamed Miner 1':
+    host: miner1_hostname
+  'Unnamed Miner 2':
+    host: miner2_hostname
+    port: 4029
+EOF
+    end
+    puts "Sample configuration written to #{file}"
+    exit
+  end
+  opts.on('-c', '--config FILE', String, 'YAML configuration file') do |c|
+    options[:config] = c
+  end
+  opts.on('-d', '--debug LEVEL', [:debug, :info], 'Debug level (debug, info)') do |dbg|
+    log.level = { debug: Logger::DEBUG, info: Logger::INFO }.fetch(dbg, Logger::WARN)
+  end
+  opts.on('-v', '--version', 'Print application version') do
+    puts "#{me} v#{Mobileminer::Adapter::VERSION}"
+    exit
+  end
+end.parse!
+
+fail 'Configuration file is required' unless options[:config]
+
+begin
+  config = YAML.load(open(options[:config]).read)
+rescue => e
+  puts 'An error occurred parsing configuration file'
+  fail
+end
+
+key = options.fetch(:key, config['application-key'])
+fail 'Application key is required' if key.nil?
+
+email = options.fetch(:key, config['email-address'])
+fail 'Email address is required' if email.nil?
+
+# build a hash-o-miner clients
+miners = config['miners'].map do |miner|
+  client = CGMiner::API::Client.new(miner[1]['host'], miner[1]['port'] || 4028)
+  { name: miner[0], client: client }
+end
+
+monitor = Mobileminer::Adapter::Monitor.new(email, key, miners, log)
+monitor.run
