@@ -1,4 +1,4 @@
-## MobileMiner Adapter [![Build Status](https://travis-ci.org/code-lever/mobileminer-adapter-gem.png)](https://travis-ci.org/code-lever/mobileminer-adapter-gem) [![Dependency Status](https://gemnasium.com/code-lever/mobileminer-adapter-gem.png)](https://gemnasium.com/code-lever/mobileminer-adapter-gem) [![Code Climate](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem.png)](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem)
+## MobileMiner Adapter [![Build Status](https://travis-ci.org/code-lever/mobileminer-adapter-gem.png)](https://travis-ci.org/code-lever/mobileminer-adapter-gem) [![Code Climate](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem.png)](https://codeclimate.com/github/code-lever/mobileminer-adapter-gem)
 
 Just a simple Ruby gem to shove data at [MobileMiner](http://www.mobileminerapp.com).
 
